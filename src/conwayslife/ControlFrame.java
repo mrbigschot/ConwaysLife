@@ -32,8 +32,6 @@ public class ControlFrame extends javax.swing.JFrame {
         densitySlider = new javax.swing.JSlider();
         jLabel3 = new javax.swing.JLabel();
         colorButton = new javax.swing.JToggleButton();
-        sizeSlider = new javax.swing.JSlider();
-        jLabel5 = new javax.swing.JLabel();
         runButton = new javax.swing.JButton();
         viralButton = new javax.swing.JToggleButton();
         resetButton = new javax.swing.JButton();
@@ -43,7 +41,9 @@ public class ControlFrame extends javax.swing.JFrame {
         setBounds(new java.awt.Rectangle(650, 0, 300, 50));
 
         speedSlider.setMajorTickSpacing(10);
-        speedSlider.setValue(20);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setSnapToTicks(true);
+        speedSlider.setValue(80);
         speedSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 speedSliderStateChanged(evt);
@@ -53,6 +53,7 @@ public class ControlFrame extends javax.swing.JFrame {
         jLabel2.setText("Speed:");
 
         densitySlider.setMajorTickSpacing(1);
+        densitySlider.setValue(0);
         densitySlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 densitySliderStateChanged(evt);
@@ -61,22 +62,12 @@ public class ControlFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Cell Density:");
 
-        colorButton.setText("Colorful");
+        colorButton.setText("COLOR");
         colorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorButtonActionPerformed(evt);
             }
         });
-
-        sizeSlider.setMaximum(200);
-        sizeSlider.setMinimum(50);
-        sizeSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sizeSliderStateChanged(evt);
-            }
-        });
-
-        jLabel5.setText("Board Size:");
 
         runButton.setText("RUN");
         runButton.addActionListener(new java.awt.event.ActionListener() {
@@ -121,13 +112,9 @@ public class ControlFrame extends javax.swing.JFrame {
                         .addComponent(colorButton)
                         .addGap(15, 15, 15))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(densitySlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sizeSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(densitySlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -139,11 +126,7 @@ public class ControlFrame extends javax.swing.JFrame {
                     .addComponent(runButton)
                     .addComponent(viralButton)
                     .addComponent(resetButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sizeSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(densitySlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -159,7 +142,7 @@ public class ControlFrame extends javax.swing.JFrame {
 
     private void speedSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_speedSliderStateChanged
         int n = speedSlider.getValue();
-        theController.setSpeed(n);
+        theController.setSpeed(100 - n);
     }//GEN-LAST:event_speedSliderStateChanged
 
     private void densitySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_densitySliderStateChanged
@@ -168,13 +151,8 @@ public class ControlFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_densitySliderStateChanged
 
     private void colorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorButtonActionPerformed
-        Cell.colorful = !Cell.colorful;
+        theFrame.toggleColorful();
     }//GEN-LAST:event_colorButtonActionPerformed
-
-    private void sizeSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sizeSliderStateChanged
-        reset();
-        theFrame.setN(sizeSlider.getValue());
-    }//GEN-LAST:event_sizeSliderStateChanged
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         theController.toggleRunning();
@@ -230,10 +208,8 @@ public class ControlFrame extends javax.swing.JFrame {
     private javax.swing.JSlider densitySlider;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton runButton;
-    private javax.swing.JSlider sizeSlider;
     private javax.swing.JSlider speedSlider;
     private javax.swing.JToggleButton viralButton;
     // End of variables declaration//GEN-END:variables

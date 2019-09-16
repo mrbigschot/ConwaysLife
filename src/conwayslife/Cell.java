@@ -4,9 +4,8 @@ import java.awt.Color;
 
 public class Cell {
 
-    public static boolean colorful = false;
-    int neighbors, viralNeighbors;
-    boolean alive, viral;
+    private int neighbors, viralNeighbors;
+    private boolean alive, viral;
 
     public Cell() {
     }
@@ -22,11 +21,6 @@ public class Cell {
         viral = virus;
     }
 
-    public Cell(String[] tokens) {
-        alive = tokens[2].equals("true");
-        viral = tokens[3].equals("true");
-    }
-
     public int getNeighbors() {
         return neighbors;
     }
@@ -35,27 +29,29 @@ public class Cell {
         return viralNeighbors;
     }
 
-    public boolean getAlive() {
+    public boolean isAlive() {
         return alive;
     }
 
-    public void setNeighbors(int neighbors) {
-        this.neighbors = neighbors;
+    public void setAlive(boolean val) {
+        this.alive = val;
     }
 
-    public void setViralNeighbors(int n) {
-        this.viralNeighbors = n;
+    public void setNeighbors(int val) {
+        this.neighbors = val;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public void setViralNeighbors(int val) {
+        this.viralNeighbors = val;
     }
 
-    public void setViral(boolean v) {
-        viral = v;
+    public boolean isViral() { return this.viral; }
+    
+    public void setViral(boolean val) {
+        viral = val;
     }
 
-    void update() {
+    public void update() {
         if (alive) {
             if (neighbors < 2 || neighbors > 3) {
                 alive = false;
@@ -75,27 +71,69 @@ public class Cell {
         }
     }
 
-    Color getColor() {
+    Color getColor(boolean viralMode, boolean colorful) {
         if (colorful) {
-            switch (neighbors) {
-                case 0:
-                    return new Color(0, 0, 0);
-                case 1:
-                    return new Color(100, 100, 100);
-                case 2:
-                    return new Color(0, 0, 255);
-                case 3:
-                    return new Color(0, 255, 255);
-                case 4:
-                    return new Color(0, 255, 0);
-                case 5:
-                    return new Color(255, 255, 0);
-                case 6:
-                    return new Color(255, 150, 0);
-                case 7:
-                    return new Color(255, 0, 0);
-                case 8:
-                    return new Color(255, 255, 255);
+            if (viralMode) {
+                switch (viralNeighbors) {
+                    case 0:
+                        switch (neighbors) {
+                            case 0:
+                                return new Color(0, 0, 0);
+                            case 1:
+                                return new Color(200, 250, 250);
+                            case 2:
+                                return new Color(150, 250, 200);
+                            case 3:
+                                return new Color(100, 250, 150);
+                            case 4:
+                                return new Color(50, 200, 150);
+                            case 5:
+                                return new Color(0, 100, 100);
+                            case 6:
+                                return new Color(0, 50, 50);
+                            case 7:
+                                return new Color(0, 50, 50);
+                            case 8:
+                                return new Color(0, 0, 0);
+                        }
+                    case 1:
+                        return new Color(250, 100, 100);
+                    case 2:
+                        return new Color(250, 75, 75);
+                    case 3:
+                        return new Color(250, 50, 50);
+                    case 4:
+                        return new Color(200, 50, 50);
+                    case 5:
+                        return new Color(200, 0, 0);
+                    case 6:
+                        return new Color(100, 0, 0);
+                    case 7:
+                        return new Color(100, 0, 0);
+                    case 8:
+                        return new Color(0, 0, 0);
+                }
+            } else {
+                switch (neighbors) {
+                    case 0:
+                        return new Color(0, 0, 0);
+                    case 1:
+                        return new Color(200, 250, 250);
+                    case 2:
+                        return new Color(150, 250, 200);
+                    case 3:
+                        return new Color(100, 250, 150);
+                    case 4:
+                        return new Color(50, 200, 150);
+                    case 5:
+                        return new Color(0, 100, 100);
+                    case 6:
+                        return new Color(0, 50, 50);
+                    case 7:
+                        return new Color(0, 50, 50);
+                    case 8:
+                        return new Color(0, 0, 0);
+                }
             }
         } else {
             if (alive) {
@@ -112,14 +150,14 @@ public class Cell {
     public String toString() {
         String returnMe = "Cell: ";
         returnMe += "\n\tLiving Neighbors = " + getNeighbors();
-        returnMe += "\n\tAlive = " + getAlive();
+        returnMe += "\n\tAlive = " + isAlive();
         returnMe += "\n\tViral = " + viral;
         return returnMe;
     }
 
     String saveString() {
         String returnMe = "";
-        returnMe += getAlive() + ";";
+        returnMe += isAlive() + ";";
         returnMe += (viral ? 1 : 0);
         return returnMe;
     }

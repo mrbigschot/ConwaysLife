@@ -4,19 +4,16 @@ import java.awt.Graphics;
 
 public class Board extends javax.swing.JPanel {
 
-    int N = 50;
-    int density = 20;
-    int w = 600 / N;
-    Cell[][] square = new Cell[N][N];
+    private final int N = 256;
+    private int density = 20;
+    private final int cellWidth = 2;
+    private final Cell[][] square = new Cell[N][N];
     LifeFrame theFrame;
-    int up = 10;
-    int left = 10;
-    int right = left + N * w;
-    int down = up + N * w;
+    int topMargin = 10;
+    int leftMargin = 10;
     Cell[][] old1 = defaultGrid();
     Cell[][] old2 = defaultGrid();
-    int count = 0;
-    boolean viral;
+    private boolean viral, colorful = true;
 
     public Board(LifeFrame theFrame) {
         initComponents();
@@ -32,12 +29,16 @@ public class Board extends javax.swing.JPanel {
         theFrame.repaint();
     }
 
+    public void toggleColorful() { 
+        colorful = !colorful;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
-                g.setColor(square[row][column].getColor());
-                g.fillRect(left + column * w, up + row * w, w, w);
+                g.setColor(square[row][column].getColor(viral, colorful));
+                g.fillRect(leftMargin + column * cellWidth, topMargin + row * cellWidth, cellWidth, cellWidth);
             }
         }
     }
@@ -65,8 +66,8 @@ public class Board extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        int column = (evt.getX() - left) / w;
-        int row = (evt.getY() - up) / w;
+        int column = (evt.getX() - leftMargin) / cellWidth;
+        int row = (evt.getY() - topMargin) / cellWidth;
         square[row][column].setAlive(true);
         square[row][column].setViral(viral);
         theFrame.repaint();
@@ -74,6 +75,7 @@ public class Board extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    
     private void createSquare() {
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
@@ -102,7 +104,7 @@ public class Board extends javax.swing.JPanel {
         int neighbors = 0;
         for (int r = row - 1; r <= row + 1; r++) {
             for (int c = column - 1; c <= column + 1; c++) {
-                if (square[fix(r)][fix(c)].getAlive()) {
+                if (square[fix(r)][fix(c)].isAlive()) {
                     if (r != row || c != column) {
                         neighbors++;
                     }
@@ -153,7 +155,7 @@ public class Board extends javax.swing.JPanel {
         int neighbors = 0;
         for (int r = row - 1; r <= row + 1; r++) {
             for (int c = column - 1; c <= column + 1; c++) {
-                if (square[fix(r)][fix(c)].getAlive() && square[fix(r)][fix(c)].viral) {
+                if (square[fix(r)][fix(c)].isAlive() && square[fix(r)][fix(c)].isViral()) {
                     if (r != row || c != column) {
                         neighbors++;
                     }
@@ -167,7 +169,7 @@ public class Board extends javax.swing.JPanel {
         Cell[][] returnMe = defaultGrid();
         for (int row = 0; row < N; row++) {
             for (int column = 0; column < N; column++) {
-                returnMe[row][column].setAlive(input[row][column].getAlive());
+                returnMe[row][column].setAlive(input[row][column].isAlive());
                 returnMe[row][column].setNeighbors(input[row][column].getNeighbors());
                 returnMe[row][column].setViralNeighbors(input[row][column].getViralNeighbors());
             }
@@ -183,15 +185,6 @@ public class Board extends javax.swing.JPanel {
             }
         }
         return returnMe;
-    }
-
-    public void setN(int n) {
-        this.N = n;
-        w = 600 / n;
-        square = new Cell[N][N];
-        createSquare();
-        old1 = defaultGrid();
-        old2 = defaultGrid();
     }
 
     public boolean boardStuck() {
@@ -213,10 +206,10 @@ public class Board extends javax.swing.JPanel {
     }
 
     private boolean sameCell(Cell c1, Cell c2) {
-        return c1.getAlive() == c2.getAlive();
+        return c1.isAlive() == c2.isAlive();
     }
 
-    void recordGrids() {
+    public void recordGrids() {
         old2 = copy(old1);
         old1 = copy(square);
     }
@@ -229,19 +222,6 @@ public class Board extends javax.swing.JPanel {
             }
         }
         return returnMe;
-    }
-
-    public void add(MyReader mr) {
-        String input = mr.giveMeTheNextLine();
-        String[] tokens = input.split(";");
-        if (count == 0) {
-            setN(Integer.parseInt(tokens[0]));
-            count++;
-        } else {
-            int r = Integer.parseInt(tokens[0]);
-            int c = Integer.parseInt(tokens[1]);
-            square[r][c] = new Cell(tokens);
-        }
     }
 
     public void setDensity(int n) {
